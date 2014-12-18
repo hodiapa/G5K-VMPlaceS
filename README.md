@@ -1,6 +1,6 @@
 # G5K-VMPlaceS
 
-This repository contains the source of the G5K-VMPlaceS project. It corresponds to the experimental version (grid'5000) of the [https://github.com/BeyondTheClouds/VMPlaceS](VMPlaceS project).
+This repository contains the source of the G5K-VMPlaceS project. It corresponds to the experimental version (grid'5000) of the [VMPlaceS project](https://github.com/BeyondTheClouds/VMPlaceS).
 
 ## Requirements
 * java
