@@ -1,0 +1,24 @@
+# This directory contains all the files that are mandatory to perform the
+# G5K-VMPlaces experiments. 
+#
+# Book you resource on one cluster (for instance in Nancy)
+oarsub -t deploy -l "{type='kavlan'}/vlan=1+{host not in ('graphene-3.nancy.grid5000.fr') and cluster='graphene'}/switch=1/nodes=17,walltime=3:00:0" -r "2014-12-08 14:30:06" "sleep 31536000"
+
+# On the Lyon Frontend (with vm5k installed), deploy hosts and VMs 
+vm5k -j nancy:600863 -n 102 -a /home/alebre/environment/kvm-1.5-nocompression-v3.env -d n_by_hosts -l all --no-packages-management  -t '<vm mem="1024" hdd="10" cpu="1" cpuset="0" />' -o ./debug-tmp -f ./g5k-loadinjector/wheezy_alebre_tools.qcow2
+
+# please note that the g5k-loadinjector should contain all files currently
+# present in the current directory and the qcow2 backing file. Indeed, as the
+# backing file is rather large (2GB), it is not stored on github.
+ 
+# After the completion of vm5k, you should finalized the configuration of the
+# hosts and the vms by running the post-install scripts
+cp ./g5k-loadinjector/g5k-loadinjector_postinstall.py ./.
+cd ./debug-tmp
+./g5k-loadinjector_postinstall.py
+
+# The post-install script will tell you on wich node you should connect to run
+# the experiment as indicated below (please remind that you should configure
+# the *.properties files according to your expectations (see VMPlaceS project
+# for further information regarding that point). 
+java -jar G5K-LOADINJECTOR.jar 2>&1 | tee logs.txt

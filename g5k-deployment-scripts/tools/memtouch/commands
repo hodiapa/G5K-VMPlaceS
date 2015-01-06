@@ -1,0 +1,2 @@
+./memtouch-with-busyloop3 --cmd-calibrate 1800
+./memtouch-with-busyloop3 --cmd-makeload --cpu-speed 305621.803826 --mem-speed 52966516.717864 1800 20

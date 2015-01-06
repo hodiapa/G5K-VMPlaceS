@@ -1,0 +1,27 @@
+#
+## Debian wheezy for AMD64/EM64T - Generated with Chef
+#
+# Please note that I'm using a snaphsot repo on feb, 4th 2014
+# See http://snapshot.debian.org
+deb     http://ftp.fr.debian.org/debian/     wheezy main contrib non-free
+deb-src http://ftp.fr.debian.org/debian/     wheezy main contrib non-free
+
+# 
+## Security updates 
+# 
+deb     http://security.debian.org/ wheezy/updates  main contrib non-free
+deb-src http://security.debian.org/ wheezy/updates  main contrib non-free
+
+#
+# G5K sources packages
+#
+
+## Some debianized packages are used on squeeze reference environments :
+
+#   * tgz-g5k : a tool to create neutral deployment tgz image 
+#   * mx : driver for Myrinet
+
+## Uncomment the following lines to get the binaries/sources of these packages
+
+# deb http://apt.grid5000.fr/debian sid main
+# deb-src http://apt.grid5000.fr/debian sid main

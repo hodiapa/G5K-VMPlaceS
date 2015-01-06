@@ -1,0 +1,4 @@
+init_cpu_load.sh is a copy of init_cpu_load-memtouch-adjust-sleep.sh
+it creates a sracth file in the tmpfs that will be used for stressing the memory
+set_cpu_load.sh is a copy of set_cpu_load.sh
+At each invocation, it kills the previous memtouch program and creates a new one with the new load and new DP rate. 

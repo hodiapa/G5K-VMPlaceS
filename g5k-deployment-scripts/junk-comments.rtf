@@ -1,0 +1,220 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+\cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 LucidaGrande;\f2\fmodern\fcharset0 Courier;
+}
+{\colortbl;\red255\green255\blue255;\red219\green212\blue191;\red59\green35\blue34;\red215\green211\blue183;
+\red218\green210\blue192;\red154\green107\blue64;\red219\green211\blue192;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww26480\viewh12020\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 #Mettre \'e0 jour Execo\
+cd execo\
+git pull\
+make PREFIX=$HOME/.local\
+make install PREFIX=$HOME/.local\
+\
+#Mettre \'e0 jour VM5K\
+cd ~/vm5k\
+git pull\
+\
+#Chercher des ressources avec funk.\
+/home/lpouilloux/bin/funk -r paradent:17 -m free -w 3:30:00 -k -o "-t deploy  -t allow_classic_ssh"\
+# Si on utilise pas la requete funk\
+#oargridsub -v -s "2013-10-02 10:20:00" -w "2:30:00"  -t deploy -t allow_classic_ssh  rennes:rdef="\{type=\\'kavlan\\'\}/vlan=1+\{cluster=\\'paradent\\'\}/nodes=17"\
+\
+funk -m free -r griffon:17 -o "-t deploy" -k -w 4:30:00\
+./vm5k -r griffon:17 -n 170 -a /home/alebre/environment/kvm-1.5-nocompression-v3.env -d n_by_hosts -k -l all -t '<vm mem="1024" hdd="2" cpu="1" cpuset="0" />' -j nancy:553536\
+\
+\
+Resa pour mercredi AM - 5 february\
+./vm5k -n 170 -a /home/alebre/environment/kvm-1.5-nocompression-v3.env -d n_by_hosts -k -l all -t '<vm mem="1024" hdd="2" cpu="1" cpuset="0" />' -j nancy:554426\
+\
+\
+\
+\
+# lancer vm5k\
+cd vm5k\
+rm -rf vm5k_*\
+./vm5k.py  -n 170 -a /home/alebre/environment/kvm-1.5-nocompression-v2.env -d n_by_hosts -l all -t '<vm mem="2048" hdd="2" cpu="1" cpuset="0" />' -j 47113\
+\
+ou : \
+\pard\pardeftab720
+
+\fs22 \cf0 \
+./vm5k -r nancy:17 -n 170 -a /home/alebre/environment/kvm-1.5-nocompression-v3.env -d n_by_hosts -k -l all -t '<vm mem="2048" hdd="2" cpu="1" cpuset="0" />'  -w 3:30:00
+\fs24 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 site=nancy\
+\
+ssh frontend.$site "rm -rf ./vm5k_files"\
+scp -r vm5k_* frontend.$site:./vm5k_files\
+\
+ssh frontend.$sites\
+cd vm5k_files\
+# configure host OSes\
+\pard\pardeftab720
+
+\f1\fs22 \cf0 \cb2 kash -M hosts.list "export DEBIAN_MASTER=noninteractive ; apt-get update && apt-get install -y --force-yes libxml-xpath-perl libsys-virt-perl uuid-runtime -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"" -o "-l root"\
+# Si ca bloque\
+kash -M hosts.list "dpkg --configure -a --force-confdef --force-confold" -o "-l root" 
+\f0\fs24 \cb1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 #kash -M hosts.list "export DEBIAN_MASTER=noninteractive ; apt-get update && apt-get install -y --force-yes  libxml-xpath-perl libsys-virt-perl uuid-runtime" -o "-l root"\
+kaput -M hosts.list ~/deploy_40_400/migrate_vm.sh /bin/. -o "-l root"\
+kash -M hosts.list "chmod +x /bin/migrate_vm.sh" -o "-l root"\
+kaput -M hosts.list ~/deploy_40_400/get-ip.pl /bin/. -o "-l root"\
+kash -M hosts.list "chmod +x /bin/get-ip.pl" -o "-l root"\
+\
+#Modifying TC (enforce network fairness between communication, make the solution better but not\
+\pard\pardeftab720
+
+\fs22 \cf0 kash -M hosts.list "tc qdisc add dev eth0 root sfq perturb 10" -o "-l root"\
+kash -M hosts.list "tc qdisc add dev br0 root sfq perturb 10" -o  "-l root"
+\fs24 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+\pard\pardeftab720
+
+\fs22 \cf0 kash -M hosts.list "
+\fs24 /etc/init.d/cpufrequtils stop" -o "-l root"\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+sur le noeud service : \
+ssh -l root `tail  -n 1 /home/alebre/vm5k_files/hosts.list`\
+\
+check :  
+\fs22 /etc/init.d/cpufrequtils
+\fs24 \
+\
+apt-get update\
+apt-get install -y 
+\f1\fs22 \cb2 --force-yes 
+\f0\fs24 \cb1 openjdk-7-jre nfs-common 
+\f1\fs22 \cb2 -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+\f0\fs24 \cb1 \
+\
+ mount -t nfs nfs.nancy.grid5000.fr:/export/home /home\
+# configure Guest Opes\
+kaput -M vms.list /home/alebre/deploy_40_400/tools.tgz ./. -o "-l root"\
+kash -M vms.list "tar xzf tools.tgz ; cd ./tools ; ./build.sh ; cp ./bin/* /bin/."  -o "-l root"\
+\
+for i in `seq 96 101`; do virsh shutdown vm-$i ; done\
+\
+cd /home/alebre/load_injector_experiment/\
+rm ./exp.traces\
+rm all*\
+rm logs.txt\
+rm -rf ./logs/*\
+#editer le fishier worker_nodes.\
+head  -n-1 /home/alebre/vm5k_files/hosts.list >./config/worker_nodes.txt \
+java -jar G5K-LOADINJECTOR.jar 2>&1 | tee logs.txt\
+\
+Pour avoir les graphes: \
+deployer un noeud \
+oarsub -I -t deploy -l '\{cluster="paradent"\}/nodes=1,walltime=3'\
+kadeploy3 -e wheezy-x64-nfs -f $OAR_NODEFILE -k \
+\
+cd ./load_injector_experiment\
+renseigner le fichier nodes avec le noeud d\'e9ployer\
+./generate_graph.rb\
+pour le moment y'a un souci sur JAVA qui demande une validation interactive (script configure.sh dans ~/SG--INJECTOR-EXP/generation_graphs/configure.sh <= il faut rajouter le cote non interactive (DEBS=\'85. cf. testpastor.py)\
+\
+Pour verifier d'eventuels problemes:\
+grep " The following reconfiguration Plan will be performed:" -A 3 msg.trace  > reconf.txt\
+\
+\
+Pour comparer les configurations Entropy Vivo vs Entropy Simu:\
+# Cr\'e9er le fichier host.list.2\
+# Pour un fichier \
+file="0-1382533644236.txt"; cp $file $file.fixed;  j=1;  for i in `cat ../../../vm5k_files/hosts.list.2` ; do  echo "$i / $j" ; sed "s/$i/node$((j++))/g" $file.fixed > $file.tmp ; cp $file.tmp $file.fixed; done ; rm $file.tmp\
+#Pour l'ensemble des fichiers de conf d'un repertoire. \
+# se positonner dans entropy/configurations\
+head -n 16 ../../../vm5k_files/hosts.list > ../../../vm5k_files/hosts.list.2 \
+=> \
+=========\
+Pour comparer les configurations successives:\
+#Dans le repertoire vivo entropy/configuration:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f2 \cf3 \cb4 \CocoaLigature0 tail -n 34 0-1417688293150.txt |cut -d ' ' -f 1 > /tmp/hostlist.32.txt
+\f0 \cf0 \cb1 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 #Editer et virer les deux derni\'e8res lignes, puis \
+for file in `ls *.txt` ; do echo $file ; cp $file $file.fixed;  j=1;  for i in `cat /tmp/hostlist.32.txt` ; do  echo "$i / $j" ; sed "s/$i/node$((j++))/g" $file.fixed > $file.tmp ; cp $file.tmp $file.fixed; done ; rm $file.tmp ; done ;\
+for i in `ls *.txt.fixed` ; do sort $i > $i.sorted ; done\
+#Pour faire le diff\
+ls *.sorted > /tmp/bla\
+sort -g /tmp/bla > /tmp/configurationlist \
+# aller dans le r\'e9pertoire simu/entropy/configuration\
+for i in `ls *.txt` ; do sort $i > $i.sorted ; done\
+for i in `cat /tmp/configurationlist` ; do j=`echo $i|cut -d - -f1` ; echo $i/$j ; diff $i ../../../../siclo-cmo2/logs/entropy/configuration/$j-*.txt.sorted ; sleep 1 ; done \
+=====\
+#Pour comparer les reconfigurations succesives: \
+# dans vivo/entropy/reconfiguration \
+for file in `ls *.txt` ; do echo $file ; cp $file $file.fixed;  j=1;  for i in `cat /tmp/hostlist.32.txt` ; do  echo "$i / $j" ; sed "s/$i/node$((j++))/g" $file.fixed > $file.tmp ; cp $file.tmp $file.fixed; done ; rm $file.tmp ; done ;\
+ls *.fixed> /tmp/bla2\
+sort -g /tmp/bla2 > /tmp/reconfigurationlist \
+# aller dans le r\'e9pertoire simu/entropy/configuration\
+for i in `cat /tmp/reconfigurationlist` ; do j=`echo $i|cut -d - -f1` ; echo $i/$j ; diff $i ../../../../siclo-cmo2/logs/entropy/configuration/$j-*.txt.sorted ; sleep 1 ; done \
+=====\
+Pour comparer les temps de reconf:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f2 \cf3 \cb4 \CocoaLigature0 grep "Reconfiguration time" logs.simu.32.txt | cut -d ' ' -f 8 > reconf.simu.32.txt\
+grep "Reconfiguration time" logs.vivo.32.txt | cut -d ' ' -f 9 > reconf.vivo.32.txt
+\f0 \cf0 \cb1 \CocoaLigature1 \
+
+\f2 \cf3 \cb4 \CocoaLigature0 vimdiff ./reconf.simu.32.txt reconf.vivo.32.txt
+\f0 \cf0 \cb1 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+Depuis rennes\
+\pard\pardeftab720
+
+\f1\fs22 \cf0 \cb5 /home/jpastor/compare_reconfiguration_ligne.rb\
+\pard\pardeftab720
+\cf6 15:04\
+\pard\pardeftab720
+\cf0 qui s'utilise de cette fa\'e7on\
+\pard\pardeftab720
+\cf6 15:04\
+\pard\pardeftab720
+\cf0 compare_reconfiguration_ligne.rb --file_up <path> --file_down <path>\
+\
+====\
+\pard\pardeftab720
+\cf0 \cb7 \'a0 \'a0 \'a0 \'a0 \'a0 ################################################################################\
+\
+# Disable thread number limitation\
+\
+################################################################################\
+\
+ulimit -c unlimited\
+\
+sysctl -w vm.max_map_count=331072\
+\
+echo 120000 > /proc/sys/kernel/threads-max\
+\
+echo 600000 > /proc/sys/vm/max_map_count\
+\
+echo 200000 > /proc/sys/kernel/pid_max\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 \cb1 Pour compiler SG: \
+apt-get install openjdk-7-jdk\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f2 \cf3 \cb4 \CocoaLigature0 alebre@graphene-9:~/load_injector_experiment$ ./compare_reconfiguration_ligne.rb --file_up ../SG-INJECTOR-EXP/generation_graphs/results/NancyMonoCore32-88/SG/results/2014-12-08_13\\:17\\:33_entropy_32_192/all.csv --file_down ./generation_graphs/results/vivo/SG/results/2014-12-04_21\\:20\\:22_vivo/all.csv \
+\
+#Obtenir le graph de la load\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\fs28 \cf3 \cb4 grep "Current load" msg.trace |cut -d ' ' -f 2,2,6,6 > /tmp/load.data\
+Rajouter un header en premier ligne puis\
+Apres ouvrir dans R\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\fs24 \cf3 \cb4 x=read.table('./load-1024-6020.data', header=TRUE)\
+> plot(x)\
+}
