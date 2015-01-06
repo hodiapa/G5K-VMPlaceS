@@ -1,8 +1,9 @@
 # G5K-VMPlaceS
 
-This repository contains the source of the G5K-VMPlaceS project. It corresponds to the experimental version (grid'5000) of the [VMPlaceS project](https://github.com/BeyondTheClouds/VMPlaceS).
+This repository contains the source of the G5K-VMPlaceS project. It corresponds to the experimental version (grid'5000) of the [VMPlaceS](htttps://github.com/BeyondTheClouds/VMPlaceS) project.
+
 Please note that this README.md file only deals with the java code of the project. 
-If you want to see how conducting the experiments on one cluster of the Grid'5000 testbed, you must give a look to the README file present in [https://github.com/BeyondTheClouds/VMPlaceS/tree/master/g5k-deployment-scripts](https://github.com/BeyondTheClouds/VMPlaceS/tree/master/g5k-deployment-scripts) directory. 
+If you want to see how conducting the experiments on top of the Grid'5000 testbed, you must give a look to the README file present in [https://github.com/BeyondTheClouds/VMPlaceS/tree/master/g5k-deployment-scripts](https://github.com/BeyondTheClouds/VMPlaceS/tree/master/g5k-deployment-scripts) directory. In addition to a specific README file, this sub-directory contains all the files and executables such as the memtouch program which are mandatory for the experiment. 
 
 ## Requirements
 * java
