@@ -1,6 +1,8 @@
 # G5K-VMPlaceS
 
 This repository contains the source of the G5K-VMPlaceS project. It corresponds to the experimental version (grid'5000) of the [VMPlaceS project](https://github.com/BeyondTheClouds/VMPlaceS).
+Please note that this README.md file only deals with the java code of the project. 
+If you want to see how conducting the experiments on one cluster of the Grid'5000 testbed, you must give a look to the README file present in [https://github.com/BeyondTheClouds/VMPlaceS/tree/master/g5k-deployment-scripts](https://github.com/BeyondTheClouds/VMPlaceS/tree/master/g5k-deployment-scripts) directory. 
 
 ## Requirements
 * java
@@ -36,7 +38,6 @@ It will result in the creation of an archive **output.tgz** that contains the fo
 ```
 drwxr-xr-x  5 jonathan  staff   170B Dec 15 22:01 jars
 -rwxr-xr-x  1 jonathan  staff    44B Dec 15 22:01 launch.sh
--rwxr-xr-x  1 jonathan  staff   662B Dec 15 22:01 set_cpu_load.sh
 ```
 
 where the **jars** folder contains:
