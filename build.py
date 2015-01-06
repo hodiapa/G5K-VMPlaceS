@@ -151,10 +151,6 @@ for file in os.listdir("lib"):
 shutil.copy("template/launch.sh", "%s/launch.sh" % (output_folder))
 subprocess.call(["chmod", "+x", "%s/launch.sh" % (output_folder)])
 
-# Copy set_cpu_load.sh script in the output folder
-shutil.copy("set_cpu_load.sh", "%s/set_cpu_load.sh" % (output_folder))
-subprocess.call(["chmod", "+x", "%s/set_cpu_load.sh" % (output_folder)])
-
 # Creating the output.tgz archive
 logger.info("creating a clean archive: '%s.tgz'" % (output_folder))
 subprocess.call([
