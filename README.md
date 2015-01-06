@@ -1,9 +1,21 @@
 # G5K-VMPlaceS
 
-This repository contains the source of the G5K-VMPlaceS project. It corresponds to the experimental version (grid'5000) of the [VMPlaceS](htttps://github.com/BeyondTheClouds/VMPlaceS) project.
+This repository contains the source of the G5K-VMPlaceS project. It corresponds
+to the ``in vivo'' version of the
+[VMPlaceS](htttps://github.com/BeyondTheClouds/VMPlaceS) project. That is, it
+has not been implemented to be released as an independant piece of code but has been developped in order to validate the correct behavior of the VMPlaceS code on top  a distributed infrastructure such as the Grid'5000 testbed. 
 
-Please note that this README.md file only deals with the java code of the project. 
-If you want to see how conducting the experiments on top of the Grid'5000 testbed, you must give a look to the README file present in [https://github.com/BeyondTheClouds/G5K-VMPlaceS/tree/master/g5k-deployment-scripts](https://github.com/BeyondTheClouds/VMPlaceS/tree/master/g5k-deployment-scripts) directory. In addition to a specific README file, this sub-directory contains all the files and executables such as the memtouch program which are mandatory for the experiment. 
+If you are interested by the VMPlaceS simulator (Virtual Machine Placement Simulator), you should give a look at 
+[here](htttps://github.com/BeyondTheClouds/VMPlaceS).
+
+
+Regarding this README.md file, please note it only deals with the java code of the G5K-VMPlaceS project. 
+If you want to see how conducting the experiments on top of the Grid'5000
+testbed, you must give a look to the README file present in
+[https://github.com/BeyondTheClouds/G5K-VMPlaceS/tree/master/g5k-deployment-scripts](https://github.com/BeyondTheClouds/VMPlaceS/tree/master/g5k-deployment-scripts)
+directory. In addition to a specific README file, this sub-directory contains
+all the files and executables such as the memtouch program which are mandatory
+for the experiment. 
 
 ## Requirements
 * java
@@ -51,7 +63,8 @@ where the **jars** folder contains:
 
 ## Run jar on grid'5000
 
-extract the previously generated archive on a server, and run:
+extract the previously generated archive on the server returned by the post-install script, and run (see :
+[https://github.com/BeyondTheClouds/G5K-VMPlaceS/tree/master/g5k-deployment-scripts](https://github.com/BeyondTheClouds/VMPlaceS/tree/master/g5k-deployment-scripts) sub-directory).
 
 ```
 $ ./launch.sh
