@@ -21,4 +21,6 @@ cd ./debug-tmp
 # the experiment as indicated below (please remind that you should configure
 # the *.properties files according to your expectations (see VMPlaceS project
 # for further information regarding that point). 
-java -jar G5K-LOADINJECTOR.jar 2>&1 | tee logs.txt
+./launch.sh
+#Please note that launcher is the one previoulsy built (see root of the G5K-VMPlaceS directory).
+
